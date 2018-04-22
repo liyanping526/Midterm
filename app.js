@@ -9,7 +9,7 @@ $(document).ready(function() {
 						+ query
 						+ "&api_key="
 						+ key
-						+ "&limit=5"
+						+ "&limit=10"
 						+ "&offset="
 						+ offset;
 			
@@ -18,9 +18,7 @@ $(document).ready(function() {
                 document.getElementById('gifs').innerHTML = "";
                 
                 var gifs = []
-                var cards
-                var $game = $('#gifs');
-                var matches = 4;
+                var matches = 2;
                 for (let m = 0; m < matches; m++) {
                     for (let i = 0; i < json.data.length; i++) {
                         const img = json.data[i];
@@ -37,13 +35,54 @@ $(document).ready(function() {
                         }
                     }
 				}
-            $(function () {
-                const parent = $("#gifs");
-                const divs = parent.children();
-                while (divs.length) { 
-                    parent.append (divs.splice(Math.floor(Math.random() * divs.length),1)[0]);
-                }
-            });
+
+                $(function () {
+                    const parent = $("#gifs");
+                    const divs = parent.children();
+                    while (divs.length) { 
+                        parent.append (divs.splice(Math.floor(Math.random() * divs.length),1)[0]);
+                    }
+                });
+                   
+				var clickedCards = [];
+				// each card/image needs clicks event
+				$('.gif').click(function() {
+					const $card = $(this);
+					// reveal images
+					$card.children().show();
+					// is there another image to compare
+					console.log(clickedCards.length, matches);
+					if (clickedCards.length == matches - 1) {
+						// compare images
+						var allMatch = true;
+						for (let i = 0; i < clickedCards.length; i++) {
+							if (clickedCards[i].num = $card.data().num) {
+								allMatch = false;
+							}
+						}
+						if (allMatch) {
+                            // not a match, hide the images
+							$card.children().fadeIn(0);
+							for (let i = 0; i < clickedCards.length; i++) {
+								clickedCards[i].img.hide(0);
+							}
+							
+						} else {
+				            // match, stay face up
+                            $card.children().show(0);
+							console.log("this is a match");
+							// if all matches game is won
+						}
+						// clear the current image
+						clickedCards = [];
+					} else {
+						// keep track of current image
+						clickedCards.push({
+							num: $card.data().num,
+							img: $card.find('img')
+						});
+					}
+				});
                 
                 
 			});//the end of json function
