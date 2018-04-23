@@ -17,7 +17,7 @@ $(document).ready(function() {
 				console.log(json);
                 document.getElementById('gifs').innerHTML = "";
                 
-                var gifs = []
+                
                 var matches = 2;
                 for (let m = 0; m < matches; m++) {
                     for (let i = 0; i < json.data.length; i++) {
@@ -34,8 +34,10 @@ $(document).ready(function() {
                              $('#gifs').append(imgContainer);
                         }
                     }
-				}
+				        }
 
+
+                // random the position of gifs
                 $(function () {
                     const parent = $("#gifs");
                     const divs = parent.children();
@@ -43,48 +45,45 @@ $(document).ready(function() {
                         parent.append (divs.splice(Math.floor(Math.random() * divs.length),1)[0]);
                     }
                 });
+
+
+                var points = 0;
+                var score = $("h2");
+
+                $(".gif").click(function () {
+                  
+                  /* Toggle the flip class */
+                  $(this).toggleClass("flipped");
+                  
+                  /* Get all of the currently flipped cards */
+                  var flipped = $(".flipped");
+                  
+                  /* Check to make sure at least 2 are flipped */  
+                  if ( flipped.length === 2 ) {
+                    /* Select the first and second cards from the collection */
+                    var firstCard = flipped.first();
+                    var secondCard = flipped.last();
+
+                    /* Compare to see if the first and second in our collection are equal */
+                    if ( firstCard.text() === secondCard.text() ) {
+                      points++;
+                      score.text("You've found " + points + " points.");
+                      firstCard.hide();
+                      secondCard.hide();
+                      
+                    }
+                  
+                    setTimeout(function () {
+                      $(".flipped").removeClass("flipped");
+                    }, 1000);
+                  }
+                  
+                });
+
                    
-				var clickedCards = [];
-				// each card/image needs clicks event
-				$('.gif').click(function() {
-					const $card = $(this);
-					// reveal images
-					$card.children().show();
-					// is there another image to compare
-					console.log(clickedCards.length, matches);
-					if (clickedCards.length == matches - 1) {
-						// compare images
-						var allMatch = true;
-						for (let i = 0; i < clickedCards.length; i++) {
-							if (clickedCards[i].num = $card.data().num) {
-								allMatch = false;
-							}
-						}
-						if (allMatch) {
-                            // not a match, hide the images
-							$card.children().fadeIn(0);
-							for (let i = 0; i < clickedCards.length; i++) {
-								clickedCards[i].img.hide(0);
-							}
-							
-						} else {
-				            // match, stay face up
-                            $card.children().show(0);
-							console.log("this is a match");
-							// if all matches game is won
-						}
-						// clear the current image
-						clickedCards = [];
-					} else {
-						// keep track of current image
-						clickedCards.push({
-							num: $card.data().num,
-							img: $card.find('img')
-						});
-					}
-				});
+                 
                 
-                
+            
 			});//the end of json function
 		}//the end of even .which
 	});//the end of event function
